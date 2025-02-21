@@ -1,0 +1,1 @@
+ALTER TABLE "creator_requests" ADD CONSTRAINT "creator_requests_user_id_unique" UNIQUE("user_id");

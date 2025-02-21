@@ -1,0 +1,1 @@
+ALTER TABLE "creator_requests" ALTER COLUMN "user_id" SET DATA TYPE varchar;

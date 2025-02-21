@@ -1,0 +1,1 @@
+ALTER TABLE "users" ALTER COLUMN "ma_address" DROP NOT NULL;

@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1740038919290,
+      "tag": "0000_glamorous_wiccan",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740039068164,
+      "tag": "0001_grey_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740039745259,
+      "tag": "0002_faulty_drax",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1740039917759,
+      "tag": "0003_magical_red_wolf",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1740039959618,
+      "tag": "0004_sour_next_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1740040519320,
+      "tag": "0005_flawless_satana",
+      "breakpoints": true
+    }
+  ]
+}
