@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { Loader2, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { approveCreatorRequest, getPendingRequests } from '@/lib/api';
 
 interface CreatorRequest {
   id: number;
@@ -24,14 +25,8 @@ const PendingRequests = () => {
 
   const fetchRequests = async () => {
     try {
-      const token = localStorage.getItem('bigads_token');
-      console.log(token, "token") // or sessionStorage, or cookies
-      const response = await axios.get('http://localhost:8008/user/getPendingRequests', {
-        headers: {
-          Authorization: `Bearer ${token}`  // Send token in header
-        }
-      });
-      setRequests(response.data?.data || []);
+      const requestsData = await getPendingRequests();
+      setRequests(requestsData || []);
       setLoading(false);
     } catch (err) {
       setError('Failed to fetch pending requests');
@@ -42,16 +37,7 @@ const PendingRequests = () => {
   // Function to handle both approval and rejection
   const handleResponse = async (maAddress: string, responseType: 'Approve' | 'Reject') => {
     try {
-      const token = localStorage.getItem('bigads_token'); // or sessionStorage, or cookies
-      await axios.patch(
-        `http://localhost:8008/user/creator-requests/${maAddress}/approve`, 
-        { responseType }, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`  // Send token in header
-          }
-        }
-      );
+      await approveCreatorRequest(maAddress, responseType);
       showToast(`Creator request ${responseType.toLowerCase()}d successfully`, "success");
       fetchRequests();
     } catch (err) {

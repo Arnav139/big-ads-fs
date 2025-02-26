@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Wallet } from 'lucide-react';
 import { useAuthStore } from '@/store/auth';
 import Button from '@/components/shared/Button';
 
 const AuthOverlay: React.FC = () => {
-  const { connect, isConnecting } = useAuthStore();
+  const { connectMetaMask, connectDiamante } = useAuthStore();
+  const [isMetaMaskConnecting, setMetaMaskConnecting] = useState(false);
+  const [isDiamanteConnecting, setDiamanteConnecting] = useState(false);
 
-  const handleConnect = async () => {
+  const handleConnectMetaMask = async () => {
+    setMetaMaskConnecting(true);
     try {
-      await connect();
+      await connectMetaMask();
     } catch (error) {
-      console.error('Connection error:', error);
+      console.error('MetaMask connection error:', error);
+    } finally {
+      setMetaMaskConnecting(false);
+    }
+  };
+
+  const handleConnectDiamante = async () => {
+    setDiamanteConnecting(true);
+    try {
+      await connectDiamante();
+    } catch (error) {
+      console.error('Diamante wallet connection error:', error);
+    } finally {
+      setDiamanteConnecting(false);
     }
   };
 
@@ -23,14 +39,23 @@ const AuthOverlay: React.FC = () => {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Connect Your Wallet</h2>
           <p className="text-gray-600 mb-6">
-            Please connect your MetaMask wallet to access the dashboard and manage your games.
+            Please connect your wallet to access the dashboard and manage your games.
           </p>
           <Button
-            onClick={handleConnect}
-            loading={isConnecting}
-            className="w-full justify-center"
+            onClick={handleConnectMetaMask}
+            loading={isMetaMaskConnecting}
+            disabled={isDiamanteConnecting}
+            className="w-full justify-center mb-2"
           >
             Connect MetaMask
+          </Button>
+          <Button
+            onClick={handleConnectDiamante}
+            loading={isDiamanteConnecting}
+            disabled={isMetaMaskConnecting}
+            className="w-full justify-center"
+          >
+            Connect Diamante Wallet
           </Button>
           {typeof window.ethereum === 'undefined' && (
             <p className="mt-4 text-sm text-red-600">
@@ -51,4 +76,4 @@ const AuthOverlay: React.FC = () => {
   );
 };
 
-export default AuthOverlay
+export default AuthOverlay;

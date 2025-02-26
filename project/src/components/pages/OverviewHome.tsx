@@ -61,7 +61,6 @@ const OverViewHome = () => {
         //  console.log(response.data, "count data");
         setCountData(response.data.data); // Store only the 'data' object
       } catch (err) {
-        console.log(err);
         setError("Failed to load data");
       } finally {
         setLoading(false);

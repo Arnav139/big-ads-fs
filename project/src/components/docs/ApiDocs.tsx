@@ -104,7 +104,6 @@ const ApiDocs: React.FC = () => {
       });
       
       const data = await response.json();
-      console.log('Response:', data);
       // TODO: Show response in UI
     } catch (error) {
       console.error('Error:', error);
@@ -212,7 +211,7 @@ const ApiDocs: React.FC = () => {
                   <Button
                     icon={Play}
                     onClick={() => handleTryIt(endpoint)}
-                    disabled={!isAuthenticated && endpoint.headers?.Authorization}
+                    disabled={!isAuthenticated && !!endpoint.headers?.Authorization}
                   >
                     Try it
                   </Button>

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Home, GamepadIcon, CalendarClock, Key, FileText, BarChart3, BookOpen, UserPlus } from 'lucide-react';
+import { Home, GamepadIcon, CalendarClock, Key, BarChart3, BookOpen, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/store/auth';
-import { parse } from 'uuid';
+// import { parse } from 'uuid';
 import { Link } from 'react-router-dom';
 
 const navigation = [
   { name: 'Overview', icon: Home, href: '/dashboard' },
-  { name: 'Games', icon: GamepadIcon, href: '/dashboard/games' },
+  { name: 'Games', icon: GamepadIcon, href: '/dashboard/games'},
   { name: 'Events', icon: CalendarClock, href: '/dashboard/events' },
   { name: 'API Keys', icon: Key, href: '/dashboard/api-keys' },
   { name: 'Documentation', icon: BookOpen, href: '/dashboard/docs' },
@@ -14,17 +14,17 @@ const navigation = [
   { name: 'Pending Requests', icon: UserPlus, href: '/dashboard/pending-requests' },
 ];
 
-const Sidebar: React.FC = () => {
-  const { isAuthenticated, user } = useAuthStore();
+const Sidebar: React.FC<{isSidebarOpen: boolean; setIsSidebarOpen: any}> = ({isSidebarOpen, setIsSidebarOpen}) => {
+  const { isAuthenticated } = useAuthStore();
   
   // Get user role from localStorage
   const getAuthFromStorage = () => {
     const authData = localStorage.getItem('auth-storage');
-    console.log(authData, "authData")
+    
     if (authData) {
       try {
         const parsedData = JSON.parse(authData);
-        console.log(parsedData?.state?.userData?.role, "parsedData")
+        
         return parsedData?.state?.userData?.role;
       } catch (error) {
         console.error('Error parsing auth data:', error);
@@ -43,10 +43,12 @@ const Sidebar: React.FC = () => {
     return true;
   });
 
+
+
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-      <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
-        <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+    <div className={"fixed z-50 lg:inset-y-0 lg:flex lg:w-64 lg:flex-col transition-transform duration-300" + " " + (isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0")}>
+      <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white h-screen">
+        <div className="flex flex-1 flex-col overflow-y-auto lg:pt-5 pb-40 pt-20">
           <div className="flex flex-shrink-0 items-center px-4">
             <GamepadIcon className="h-8 w-8 text-indigo-600" />
             <span className="ml-2 text-xl font-bold text-gray-900">Bigads</span>
@@ -75,6 +77,7 @@ const Sidebar: React.FC = () => {
                     if (!isAuthenticated) {
                       e.preventDefault();
                     }
+                    setIsSidebarOpen(false);
                   }}
                 >
                   <item.icon

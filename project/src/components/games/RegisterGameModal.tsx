@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import Button from '@/components/shared/Button';
 import { registerGame, type GameEvent, type ApiError, requestCreator, getCreatorRequestStatus } from '@/lib/api';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { Game } from '@/types';
 
 interface RegisterGameModalProps {
@@ -58,7 +58,7 @@ const RegisterGameModal: React.FC<RegisterGameModalProps> = ({
       setIsRequestPending(true);
       setCreatorStatus('pending');
       toast.success('Your request to become a creator has been sent successfully!');
-      onClose();
+      // onClose();
     } catch (error) {
       if ((error as ApiError).message) {
         toast.error((error as ApiError).message);
@@ -72,15 +72,31 @@ const RegisterGameModal: React.FC<RegisterGameModalProps> = ({
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-  
+    const authStorage = localStorage.getItem("auth-storage");
+    const wallet_address = authStorage ? JSON.parse(authStorage).state.userData.maAddress : null;
+    
     try {
       const response = await registerGame({
         ...formData,
         events: events.filter(event => event.eventType.trim() !== ''),
+        wallet_address
       });
   
       onSuccess(response.data);
-      handleAddGame(response.data.game)
+      handleAddGame({
+        ...response.data.game,
+        _id: response.data.game.id,
+        gameToken: response.data.Gametoken || '',
+        isApproved: false,
+        // network: response.data.game.gameSaAddress?.startsWith('0x') ? 'metamask' : 'diamente',
+        events: response.data.events.map((event, index) => ({
+          ...event,
+          id: index + 1,
+          createdAt: new Date().toISOString()
+        }))
+      });
+
+      toast.success(response.message || "Game registered successfully!");
       
       // Reset form fields after successful submission
       setFormData({
@@ -116,7 +132,7 @@ const RegisterGameModal: React.FC<RegisterGameModalProps> = ({
   if (!isOpen) return null;
 
   // Show register game form if user is creator or has fulfilled status
-  if (role === 'creator' || creatorStatus === 'fulfilled') {
+  if (role === 'creator' || creatorStatus === 'fulfilled' || role === 'admin') {
     return (
       <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50">
         <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">

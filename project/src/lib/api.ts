@@ -39,6 +39,15 @@ export interface RegisterGameRequest {
   type: string;
   description: string;
   events: GameEvent[];
+  wallet_address: string;
+}
+
+export interface CreatorRequest {
+  id: number;
+  userId: string;
+  maAddress: string;
+  role: string;
+  status: string;
 }
 
 export interface RegisterGameResponse {
@@ -82,6 +91,35 @@ export interface RequestCreatorResponse {
   };
 }
 
+export interface ResponseGameTokenResponse {
+  data: {
+    gameToken: string;
+  };
+}
+
+export const responseGameToken = async (gameId: number): Promise<ResponseGameTokenResponse> => {
+  const response = await api.post<ResponseGameTokenResponse>('/creator/gameToken', { gameId });
+  return response.data;
+};
+
+export const sendEvents = async (eventId: string, gameId: number, wallet_address: string, gameAuthorizationToken: string, appId: string, deviceId: string) => {
+
+   const token = localStorage.getItem('bigads_token');
+  const response = await api.post('/creator/sendEvents', {
+    eventId,
+    gameId,
+    wallet_address,
+    appId,
+    deviceId,
+  },{
+    headers:{
+      Authorization: `Bearer ${token}`,
+      game_authorization_token: gameAuthorizationToken
+    }
+  });
+  return response.data;
+};
+
 export const requestCreator = async (maAddress: string, userRole: string, id: number) => {
   try {
     const response = await api.post<RequestCreatorResponse>('/user/requestCreator', {
@@ -89,6 +127,7 @@ export const requestCreator = async (maAddress: string, userRole: string, id: nu
       userRole,
       id,
     });
+    // console.log(response.data, "request creator response")
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -109,7 +148,7 @@ export const registerUser = async (appId: string, deviceId: string, maAddress: s
     if (response.data.token) {
       localStorage.setItem('bigads_token', response.data.token);
     }
-    console.log(response.data, "register user response")
+    // console.log(response.data, "register user response")
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -157,7 +196,7 @@ export const getGames = async (filter: 'all' | 'mine' = 'all') => {
   try {
     const endpoint = filter === 'all' ? '/user/games' : '/user/my-games';
     const response = await api.get<{ data: RegisterGameResponse['data']['game'][] }>(endpoint);
-    console.log(response.data, "get games response")  
+    // console.log(response.data, "get games response")  
     return response.data;
 
   } catch (error) {
@@ -171,8 +210,32 @@ export const getGames = async (filter: 'all' | 'mine' = 'all') => {
 export const getCreatorRequestStatus = async (userId: number) => {
   try {
     const response = await api.get(`/user/creator-request-status/${userId}`);
-    console.log(response.data, "get creator request status response")
+    // console.log(response.data, "get creator request status response")
     return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data as ApiError;
+    }
+    throw error;
+  }
+};
+
+export const approveCreatorRequest = async (maAddress: string, responseType: 'Approve' | 'Reject') => {
+  try {
+    const response = await api.patch(`/user/creator-requests/${maAddress}/approve`, { responseType });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data as ApiError;
+    }
+    throw error;
+  }
+};
+
+export const getPendingRequests = async () => {
+  try {
+    const response = await api.get<{ data: CreatorRequest[] }>('/user/getPendingRequests');
+    return response.data.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       throw error.response.data as ApiError;

@@ -29,7 +29,7 @@ const DashboardHome = () => {
     <div className="w-full h-full">
       <div className="w-full h-full flex flex-col gap-4 relative">
         <div className="sticky w-full top-0 left-0 z-50 rounded-md">
-          <DashBoardNavBar />
+          {/* <DashBoardNavBar /> */}
         </div>
         <div className="w-full">
             <OverViewHome />

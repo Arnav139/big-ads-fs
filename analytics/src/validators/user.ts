@@ -51,6 +51,17 @@ export default class user {
 
         }).strict(),
       })
+
+      static getPendingRequests = z.object({
+        headers: z.object({
+          authorization: z.string().regex(/^Bearer\s+[a-zA-Z0-9-_]+\.[a-zA-Z0-9-_]+\.[a-zA-Z0-9-_]+$/, {
+            message: "Invalid Authorization token format. Must be a Bearer JWT token."
+          }),
+        }).strict(),
+        body: z.object({}).strict(), // No body expected
+        params: z.object({}).strict(), // No params expected
+        query: z.object({}).strict(), // No query expected
+      });
   
       static transactions = z.object({
         body:z.object({

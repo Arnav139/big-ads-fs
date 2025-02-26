@@ -11,7 +11,7 @@ const AnalyticCounts = ({ total, a, b }: AnalyticCounts) => {
     const bN = Number(b);
     const totalN = Number(total);
 
-    console.log(aN, bN, totalN, " countData");
+    // console.log(aN, bN, totalN, " countData");
 
     // Normalize percentages to ensure they don't exceed 100%
     const aP = Math.round((aN / totalN) * 100);
@@ -29,13 +29,13 @@ const AnalyticCounts = ({ total, a, b }: AnalyticCounts) => {
     return (
         <>
             {/* Main Component */}
-            <div className='w-full h-full flex flex-col justify-between p-6 rounded-lg  bg-[#14191F50] border border-[#31373F46] shadow-lg hover:shadow-xl transition-all duration-300'>
+            <div className='w-full h-full flex flex-col justify-between p-6 rounded-lg  bg-white border border-black shadow-lg hover:shadow-xl transition-all duration-300'>
                 {/* Header */}
                 <div className='flex items-center justify-between'>
-                    <p className='text-[14px] md:text-xl font-semibold text-white'>Transaction Analytics</p>
+                    <p className='text-[14px] md:text-xl font-semibold text-black'>Transaction Analytics</p>
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className='text-sm text-purple-400 hover:text-purple-300 transition-all duration-300'
+                        className='text-sm text-black hover:text-purple-300 transition-all duration-300'
                     >
                         View All
                     </button>
@@ -47,7 +47,7 @@ const AnalyticCounts = ({ total, a, b }: AnalyticCounts) => {
                         {bars.map((bar, index) => (
                             <div key={index} className='w-full relative'>
                                 {/* Bar Labels */}
-                                <div className='flex justify-between text-sm text-gray-400'>
+                                <div className='flex justify-between text-sm text-black'>
                                     <span>{bar.name}</span>
                                     <span>{bar.percentage}%</span>
                                 </div>
@@ -69,13 +69,13 @@ const AnalyticCounts = ({ total, a, b }: AnalyticCounts) => {
             {/* Modal */}
             {isModalOpen && (
                 <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-[#14191F99] z-50'>
-                    <div className='w-[90%] md:w-[60%] lg:w-[50%] bg-[#14191F] border border-[#31373F] rounded-lg p-6 shadow-2xl'>
+                    <div className='w-[90%] md:w-[60%] lg:w-[50%] bg-white border border-[#31373F] rounded-lg p-6 shadow-2xl'>
                         {/* Modal Header */}
                         <div className='flex items-center justify-between mb-6'>
-                            <p className='text-2xl font-semibold text-white'>Transaction Analytics</p>
+                            <p className='text-2xl font-semibold text-black'>Transaction Analytics</p>
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className='text-2xl text-gray-400 hover:text-white transition-all duration-300 p-2'
+                                className='text-2xl text-black hover:text-white transition-all duration-300 p-2'
                             >
                                 ×
                             </button>
@@ -87,7 +87,7 @@ const AnalyticCounts = ({ total, a, b }: AnalyticCounts) => {
                                 {bars.map((bar, index) => (
                                     <div key={index} className='w-full relative'>
                                         {/* Bar Labels */}
-                                        <div className='flex justify-between text-sm text-gray-400'>
+                                        <div className='flex justify-between text-sm text-black'>
                                             <span>{bar.name}</span>
                                             <span>{bar.value} ({bar.percentage}%)</span>
                                         </div>

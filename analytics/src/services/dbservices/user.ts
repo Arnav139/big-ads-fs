@@ -48,9 +48,6 @@ export default class User {
 
   static userExists:any = async(maAddress:any):Promise<any>=>{
     try{
-      // console.log("registerUser in db service " , deviceId, appId) 
-      console.log(maAddress, "maAddress")
-       // console.log(result)
       const result = await postgreDb.select().from(users).where(eq(users.maAddress,maAddress))
         return result[0]
     }catch(error:any){
@@ -401,7 +398,7 @@ export default class User {
         GameCreator:creatorID,
         toUser:userId,
         fromGameId:gameID,
-        transactionChain:"POLYGON Testnet"
+        transactionChain:"DIAMANTE Testnet"
         
       }).returning();
       return result[0];
@@ -588,7 +585,6 @@ export default class User {
           })
           .where(eq(creatorRequests.maAddress, maAddress))
           .returning();
-        console.log(process.env.owner_Secret_Key, "owner_Secret_Key")
         // Update the user role
         const updatedUser = await trx
           .update(users)

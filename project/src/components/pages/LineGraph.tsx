@@ -12,10 +12,10 @@ interface GraphData {
 
 const LineGraph: React.FC<{ data: GraphData[] }> = ({ data }) => {
   return (
-    <div className="w-full h-full bg-[#14191F50] border border-[#31373F66] rounded-lg p-4 backdrop-blur-sm">
+    <div className="w-full h-full bg-white border border-black rounded-lg p-4 backdrop-blur-sm">
       <div className="flex h-full flex-col items-center justify-center">
-       <p className="text-2xl font-semibold text-white">Coming Soon</p>
-            <p className="text-sm text-gray-400 mt-2">
+       <p className="text-2xl font-semibol text-black">Coming Soon</p>
+            <p className="text-sm text-black mt-2">
               Exciting new features are on the way!
             </p>
             </div>

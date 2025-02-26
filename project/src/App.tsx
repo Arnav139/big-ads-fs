@@ -11,9 +11,10 @@ import { Plus, ArrowRight, Key } from "lucide-react";
 import { requestCreator, getCreatorRequestStatus } from "./lib/api";
 import { Game } from "./types";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Sidebar from "./components/layout/Sidebar";
 import PendingRequests from "./components/pages/PendingRequests";
 import Analytics from "./components/pages/Analytics";
+import Games from './components/pages/Games';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [games, setGames] = useState<Game[]>([]);
@@ -25,9 +26,9 @@ function App() {
   // Get user role from localStorage
   const authData = JSON.parse(localStorage.getItem("auth-storage") || "{}");
   const userData = authData?.state?.userData || {};
-  console.log(userData, "user data");
+ 
   const { role: userRole, maAddress, id, status } = userData;
-  console.log(userRole, maAddress, id, status);
+ 
   // Check creator request status on component mount
   useEffect(() => {
     const checkCreatorStatus = async () => {
@@ -50,7 +51,7 @@ function App() {
   };
 
   const handleGameRegistered = (data: any) => {
-    console.log("Game registered:", data);
+    // console.log("Game registered:", data);
     // TODO: Update games list
   };
 
@@ -99,7 +100,7 @@ function App() {
     }
 
     // Only show Register New Game button if userRole is creator and creatorStatus is fulfilled
-    if (userRole === "creator") {
+    if (userRole === "creator" || userRole === "admin") {
       return (
         <Button icon={Plus} onClick={() => setShowRegisterModal(true)}>
           Register New Game
@@ -111,6 +112,8 @@ function App() {
   };
 
   return (
+    <>
+    <ToastContainer />
     <BrowserRouter>
       <DashboardLayout>
         {!isAuthenticated && <AuthOverlay />}
@@ -119,9 +122,9 @@ function App() {
             path="/"
             element={
               <div className="space-y-6">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center sm:flex-row flex-col gap-4">
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-2xl font-bold text-gray-900 ">
                       Welcome to Bigads
                     </h1>
                     <p className="mt-1 text-sm text-gray-500">
@@ -169,9 +172,9 @@ function App() {
                       <div className="flex items-center space-x-2">
                         <div className="h-2.5 w-2.5 rounded-full bg-green-500"></div>
                         <span className="text-sm font-medium text-gray-900">
-                          {isAuthenticated
+                          {(isAuthenticated && maAddress.startsWith("0x"))
                             ? "Connected to MetaMask"
-                            : "Wallet Not Connected"}
+                            : "Connected to Diamente"}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600">
@@ -188,6 +191,7 @@ function App() {
                   </h2>
                   <GamesList games={games} setGames={setGames} />
                 </div>
+               
               </div>
             }
           />
@@ -203,6 +207,8 @@ function App() {
             />
           )}
 
+          <Route path="/dashboard/games" element={<Games />} />
+
           {/* Catch-all route to redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -215,6 +221,7 @@ function App() {
         />
       </DashboardLayout>
     </BrowserRouter>
+    </>
   );
 }
 
